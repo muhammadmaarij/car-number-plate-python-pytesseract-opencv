@@ -1,23 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  SafeAreaView,
+  RefreshControl,
+} from "react-native";
 import axios from "axios";
 import { Appbar, Card, Title, Paragraph } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
     axios
       .get("http://192.168.56.1:5000/license-plates")
       .then((response) => {
         setData(response.data);
+        setRefreshing(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+        setRefreshing(false);
       });
-  }, []);
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
 
   const renderItem = ({ item }) => (
     <Card style={styles.card}>
@@ -42,6 +61,9 @@ export default function App() {
           renderItem={renderItem}
           keyExtractor={(item) => item._id}
           contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       </SafeAreaView>
     </SafeAreaProvider>
