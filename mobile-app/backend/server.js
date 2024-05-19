@@ -35,7 +35,7 @@ app.get("/license-plates", async (req, res) => {
   try {
     console.log("Fetching plates from database...");
     const plates = await LicensePlate.find();
-    console.log("Retrieved plates:", plates); // Debugging statement
+    console.log("Retrieved plates:", plates);
     res.json(plates);
   } catch (err) {
     console.error("Error retrieving plates:", err);
