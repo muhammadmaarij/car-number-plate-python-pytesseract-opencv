@@ -3,9 +3,17 @@ import cv2
 import imutils
 import pytesseract
 import time
+from pymongo import MongoClient
+from datetime import datetime
 
 # Setup for pytesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+# MongoDB setup
+client = MongoClient(
+    "mongodb+srv://a:a@cluster0.1cih6pg.mongodb.net/")
+db = client['car-number']
+collection = db['number-plates']
 
 
 def preprocess_image(image):
@@ -44,8 +52,16 @@ def find_license_plate_contour(edged):
 
 def is_valid_license_plate(text):
     # Implement simple validation for detected license plate text
-    # This can be customized based on the expected format of license plates
     return len(text) > 5 and len(text) < 15 and any(char.isdigit() for char in text)
+
+
+def save_to_mongo(license_plate):
+    document = {
+        "license_plate": license_plate,
+        "timestamp": datetime.now()
+    }
+    collection.insert_one(document)
+    print(f"Saved to MongoDB: {document}")
 
 
 def main():
@@ -97,6 +113,7 @@ def main():
                 text = text.strip()
                 if is_valid_license_plate(text):
                     print("Detected License Plate Number:", text)
+                    save_to_mongo(text)
                     time.sleep(5)  # Wait for 5 seconds before continuing
 
             # Display the resulting frame
