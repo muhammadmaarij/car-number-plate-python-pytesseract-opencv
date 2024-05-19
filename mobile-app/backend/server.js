@@ -30,7 +30,7 @@ const licensePlateSchema = new mongoose.Schema(
 
 const LicensePlate = mongoose.model("LicensePlate", licensePlateSchema);
 
-// Routes
+// Route
 app.get("/license-plates", async (req, res) => {
   try {
     console.log("Fetching plates from database...");
