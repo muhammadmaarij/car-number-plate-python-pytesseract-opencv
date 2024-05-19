@@ -38,7 +38,7 @@ app.get("/license-plates", async (req, res) => {
     console.log("Retrieved plates:", plates); // Debugging statement
     res.json(plates);
   } catch (err) {
-    console.error("Error retrieving plates:", err); // Debugging statement
+    console.error("Error retrieving plates:", err);
     res.status(400).json("Error: " + err);
   }
 });
