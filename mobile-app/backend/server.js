@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
+require("dotenv").config();
+
 const app = express();
 const port = 5000;
 
 // MongoDB connection
-const uri =
-  "mongodb+srv://a:a@cluster0.1cih6pg.mongodb.net/car-number?retryWrites=true&w=majority";
+const uri = process.env.MONGODB_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const connection = mongoose.connection;
